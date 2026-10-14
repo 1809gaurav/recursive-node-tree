@@ -4,9 +4,22 @@ import { buildTree, collectIds } from "./tree";
 import type { NodeRow, TreeNodeData } from "./types";
 import TreeNode from "./components/TreeNode";
 import AddNodeForm from "./components/AddNodeForm";
-  import ThemeToggle from "./components/ThemeToggle";
+import ThemeToggle from "./components/ThemeToggle";
+import LayoutToggle, { type Layout } from "./components/LayoutToggle";
+
+// Saved choice first, otherwise horizontal.
+function getInitialLayout(): Layout {
+  try {
+    const saved = localStorage.getItem("layout");
+    if (saved === "horizontal" || saved === "vertical") return saved;
+  } catch {
+    /* storage can be blocked; fall through */
+  }
+  return "horizontal";
+}
 
 export default function App() {
+  const [layout, setLayout] = useState<Layout>(getInitialLayout);
   const [rows, setRows] = useState<NodeRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,8 +37,32 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    let active = true;
+    api.list()
+      .then((data) => {
+        if (active) setRows(data);
+      })
+      .catch((err: unknown) => {
+        if (active) {
+          setError(err instanceof Error ? err.message : "Could not load the tree.");
+        }
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("layout", layout);
+    } catch {
+      /* ignore */
+    }
+  }, [layout]);
 
   const tree = useMemo(() => buildTree(rows), [rows]);
 
@@ -56,12 +93,15 @@ export default function App() {
         <header className="header">
     <div className="header-top">
       <h1>Node tree</h1>
-      <ThemeToggle />
+      <div className="header-actions">
+        <LayoutToggle layout={layout} onChange={setLayout} />
+        <ThemeToggle />
+      </div>
     </div>
     <p>Add nodes, nest them as deep as you like, and expand or collapse any branch.</p>
   </header>
 
-      <section className="panel" aria-busy={loading}>
+      <section className={`panel layout-${layout}`} aria-busy={loading}>
         <AddNodeForm
           placeholder="Name a new root node"
           buttonLabel="Add root"
