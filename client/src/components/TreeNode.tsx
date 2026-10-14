@@ -7,10 +7,11 @@ interface Props {
   node: TreeNodeData;
   onAdd: (name: string, parentId: number) => Promise<void>;
   onDelete: (node: TreeNodeData) => Promise<void>;
+    depth?: number; // how deep this node is; picks the card colour
 }
 
 // Recursive component: each node renders its children as more <TreeNode>s.
-export default function TreeNode({ node, onAdd, onDelete }: Props) {
+  export default function TreeNode({ node, onAdd, onDelete, depth = 0 }: Props) {
   const [open, setOpen] = useState(false); // every node starts collapsed
   const childCount = node.children.length;
 
@@ -30,7 +31,7 @@ export default function TreeNode({ node, onAdd, onDelete }: Props) {
 
   return (
     <li className="node">
-      <div className="node-row">
+        <div className={`node-row depth-${depth % 5}`}>
         <button
           className="toggle"
           onClick={() => setOpen((o) => !o)}
@@ -53,7 +54,13 @@ export default function TreeNode({ node, onAdd, onDelete }: Props) {
       {open && (
         <ul className="children">
           {node.children.map((child) => (
-            <TreeNode key={child.id} node={child} onAdd={onAdd} onDelete={onDelete} />
+              <TreeNode
+    key={child.id}
+    node={child}
+    onAdd={onAdd}
+    onDelete={onDelete}
+    depth={depth + 1}
+  />
           ))}
           <li className="add-row">
             <AddNodeForm

@@ -4,6 +4,7 @@ import { buildTree, collectIds } from "./tree";
 import type { NodeRow, TreeNodeData } from "./types";
 import TreeNode from "./components/TreeNode";
 import AddNodeForm from "./components/AddNodeForm";
+  import ThemeToggle from "./components/ThemeToggle";
 
 export default function App() {
   const [rows, setRows] = useState<NodeRow[]>([]);
@@ -52,10 +53,13 @@ export default function App() {
 
   return (
     <main className="page">
-      <header className="header">
-        <h1>Node tree</h1>
-        <p>Add nodes, nest them as deep as you like, and expand or collapse any branch.</p>
-      </header>
+        <header className="header">
+    <div className="header-top">
+      <h1>Node tree</h1>
+      <ThemeToggle />
+    </div>
+    <p>Add nodes, nest them as deep as you like, and expand or collapse any branch.</p>
+  </header>
 
       <section className="panel" aria-busy={loading}>
         <AddNodeForm
