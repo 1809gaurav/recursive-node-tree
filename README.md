@@ -41,17 +41,7 @@ A single-page app where every node can hold more nodes, to any depth. Create roo
 <img src="https://capsule-render.vercel.app/api?type=rect&color=0:5B4BDB,100:FFE9A8&height=2&width=760" />
 </div>
 
-<br/>
-
-<h2 align="center" id="preview">Preview</h2>
-
-<div align="center">
-<img src="docs/preview-light.png" width="48%" alt="Horizontal layout, light theme"/>
-<img src="docs/preview-dark.png" width="48%" alt="Vertical layout, dark theme"/>
-<p><sub>Left: horizontal flow, light theme. Right: vertical flow, dark theme.</sub></p>
-</div>
-
-<br/>
+<br>
 
 <div align="center">
 <img src="https://capsule-render.vercel.app/api?type=rect&color=0:5B4BDB,100:FFE9A8&height=2&width=760" />
