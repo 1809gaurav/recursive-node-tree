@@ -101,7 +101,7 @@ export default function App() {
     <p>Add nodes, nest them as deep as you like, and expand or collapse any branch.</p>
   </header>
 
-      <section className={`panel layout-${layout}`} aria-busy={loading}>
+      <div className="toolbar">
         <AddNodeForm
           placeholder="Name a new root node"
           buttonLabel="Add root"
@@ -114,7 +114,9 @@ export default function App() {
             <button onClick={load}>Reload</button>
           </div>
         )}
+      </div>
 
+      <section className={`panel layout-${layout}`} aria-busy={loading}>
         {loading ? (
           <p className="status">Loading your tree…</p>
         ) : tree.length === 0 && !error ? (
